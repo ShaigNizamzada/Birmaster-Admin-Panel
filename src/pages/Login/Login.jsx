@@ -21,7 +21,7 @@ const Login = () => {
       })
       .then((res) => {
         toast.success(res.data.message);
-        const token = res?.data?.data?.token;
+        const token = res?.data?.token;
         if (token) {
           const isSecure = window.location.protocol === "https:";
           setCookie("token", token, {

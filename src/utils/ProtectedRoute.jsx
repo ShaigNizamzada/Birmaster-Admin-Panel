@@ -31,7 +31,7 @@ const ProtectedRoute = () => {
           }
         );
 
-        if (response?.data?.user?.id === 1) {
+        if (response?.data?.user?.id == 1) {
           setIsValid(true);
         } else {
           removeCookie("token", { path: "/" });

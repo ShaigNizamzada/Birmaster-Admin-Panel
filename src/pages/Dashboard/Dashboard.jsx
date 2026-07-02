@@ -1,5 +1,3 @@
-
-import { useCookies } from "react-cookie";
 import "./Dashboard.scss";
 const Dashboard = () => {
   return (
