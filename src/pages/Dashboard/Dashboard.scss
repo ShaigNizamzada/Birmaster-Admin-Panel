@@ -1,0 +1,311 @@
+.dashboard-container {
+  padding: 20px;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+
+  .loading-state,
+  .error-state {
+    text-align: center;
+    padding: 40px;
+    background: white;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    font-size: 18px;
+    color: #7f8c8d;
+  }
+
+  .error-state {
+    color: #e74c3c;
+  }
+
+  .dashboard-content {
+    .welcome-section {
+      background: white;
+      color: #2c3e50;
+      padding: 30px;
+      border-radius: 12px;
+      margin-bottom: 30px;
+      text-align: center;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+
+      h2 {
+        margin: 0 0 10px 0;
+        font-size: 24px;
+        font-weight: 600;
+        color: #2c3e50;
+      }
+
+      p {
+        margin: 0;
+        font-size: 16px;
+        color: #7f8c8d;
+      }
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 25px;
+      margin-bottom: 40px;
+
+      .stat-card {
+        background: white;
+        padding: 30px 25px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        text-align: center;
+        transition: all 0.3s ease;
+        border: 2px solid #f0f0f0;
+
+        &:hover {
+          transform: translateY(-4px);
+          box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        &.orders {
+          border-color: #3498db;
+
+          .stat-icon {
+            color: #3498db;
+          }
+
+          .stat-number {
+            color: #3498db;
+          }
+        }
+
+        &.revenue {
+          border-color: #27ae60;
+
+          .stat-icon {
+            color: #27ae60;
+          }
+
+          .stat-number {
+            color: #27ae60;
+          }
+        }
+
+        &.customers {
+          border-color: #9b59b6;
+
+          .stat-icon {
+            color: #9b59b6;
+          }
+
+          .stat-number {
+            color: #9b59b6;
+          }
+        }
+
+        &.average {
+          border-color: #e67e22;
+
+          .stat-icon {
+            color: #e67e22;
+          }
+
+          .stat-number {
+            color: #e67e22;
+          }
+        }
+
+        &.users {
+          border-color: #667eea;
+
+          .stat-icon {
+            color: #667eea;
+          }
+
+          .stat-number {
+            color: #667eea;
+          }
+        }
+
+        &.announcements {
+          border-color: #f5576c;
+
+          .stat-icon {
+            color: #f5576c;
+          }
+
+          .stat-number {
+            color: #f5576c;
+          }
+        }
+
+        &.categories {
+          border-color: #4bc970;
+
+          .stat-icon {
+            color: #4bc970;
+          }
+        }
+
+        &.sub-categories {
+          border-color: #f1c40f;
+
+          .stat-icon {
+            color: #f1c40f;
+          }
+        }
+
+        .stat-icon {
+          font-size: 2.5rem;
+          margin-bottom: 15px;
+          transition: all 0.3s ease;
+          display: block;
+        }
+
+        h3 {
+          margin: 0 0 15px 0;
+          font-size: 14px;
+          font-weight: 600;
+          text-transform: uppercase;
+          letter-spacing: 1px;
+          color: #7f8c8d;
+        }
+
+        .stat-number {
+          font-size: 2.8rem;
+          font-weight: 700;
+          margin-bottom: 10px;
+          transition: all 0.3s ease;
+        }
+
+        .stat-trend {
+          font-size: 12px;
+          font-weight: 500;
+          color: #95a5a6;
+        }
+      }
+    }
+
+    .section-card {
+      background: white;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      margin-bottom: 30px;
+
+      .section-title {
+        margin: 0 0 20px 0;
+        font-size: 20px;
+        font-weight: 600;
+        color: #2c3e50;
+        border-bottom: 2px solid #f0f0f0;
+        padding-bottom: 15px;
+      }
+
+      .table-responsive {
+        overflow-x: auto;
+
+        .dashboard-table {
+          width: 100%;
+          border-collapse: collapse;
+
+          thead {
+            tr {
+              background-color: #f8f9fa;
+
+              th {
+                padding: 15px;
+                text-align: left;
+                font-size: 14px;
+                font-weight: 600;
+                color: #2c3e50;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                border-bottom: 2px solid #e0e0e0;
+              }
+            }
+          }
+
+          tbody {
+            tr {
+              transition: background-color 0.2s ease;
+
+              &:hover {
+                background-color: #f8f9fa;
+              }
+
+              td {
+                padding: 15px;
+                font-size: 14px;
+                color: #555;
+                border-bottom: 1px solid #f0f0f0;
+
+                &.invoice-id {
+                  font-weight: 600;
+                  color: #3498db;
+                  font-family: monospace;
+                }
+
+                &.amount {
+                  font-weight: 600;
+                  color: #27ae60;
+                }
+              }
+
+              &:last-child td {
+                border-bottom: none;
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .dashboard-container {
+    padding: 15px;
+
+    .dashboard-content {
+      .welcome-section {
+        padding: 20px;
+
+        h2 {
+          font-size: 20px;
+        }
+      }
+
+      .stats-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+
+        .stat-card {
+          padding: 25px 20px;
+
+          .stat-icon {
+            font-size: 2rem;
+          }
+
+          .stat-number {
+            font-size: 2.2rem;
+          }
+        }
+      }
+
+      .charts-section {
+        grid-template-columns: 1fr;
+        gap: 20px;
+
+        .chart-card {
+          padding: 20px;
+
+          .chart-header {
+            flex-direction: column;
+            gap: 10px;
+            text-align: center;
+
+            h3 {
+              font-size: 16px;
+            }
+          }
+        }
+      }
+    }
+  }
+}

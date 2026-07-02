@@ -1,0 +1,298 @@
+.sidebar {
+  height: 100vh;
+  width: 15%;
+  transition: width 0.3s ease;
+  background-color: var(--primary-white-color);
+  border: 1px solid var(--primary-menu-bg-color);
+  color: white;
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 10;
+  &.closed {
+    width: 5%;
+    .top-side {
+      justify-content: flex-start;
+      padding: 15px 40px 15px 20px;
+    }
+
+    .sidebar-menu {
+      display: block;
+
+      ul li {
+        justify-content: flex-start;
+        padding: 14px 0 14px 20px;
+        margin: 0;
+        i {
+          width: 24px;
+          height: 24px;
+          font-size: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        span {
+          display: none;
+        }
+
+        &.active {
+          background-color: var(--primary-menu-bg-color);
+
+          i {
+            color: var(--primary-red-color);
+          }
+        }
+      }
+    }
+
+    .birsayt-logo {
+      display: none;
+    }
+
+    .sidebar-footer {
+      li {
+        justify-content: flex-start;
+        padding: 14px 0 14px 20px;
+        margin: 0;
+
+        i {
+          width: 24px;
+          height: 24px;
+          font-size: 20px;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        span {
+          display: none;
+        }
+
+        &.active {
+          background-color: var(--primary-menu-bg-color);
+
+          i {
+            color: var(--primary-red-color);
+          }
+        }
+      }
+    }
+  }
+  .sidebar-content {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    .top-side {
+      display: flex;
+      align-items: center;
+      padding: 15px 40px 15px 20px;
+      height: 100px;
+      box-sizing: border-box;
+      position: relative;
+
+      i.desktop-toggle {
+        font-size: 20px;
+        color: var(--primary-black-color);
+        cursor: pointer;
+        min-width: 20px;
+        margin-right: 10px;
+        position: relative;
+        left: 0;
+      }
+
+      .birsayt-logo {
+        width: 100px;
+        height: 50px;
+        object-fit: contain;
+        margin-left: 0;
+      }
+
+      i.mobile-close {
+        display: none;
+        font-size: 24px;
+        color: var(--primary-black-color);
+        cursor: pointer;
+        margin-left: auto;
+      }
+    }
+    .sidebar-menu {
+      flex: 1;
+      ul {
+        list-style: none;
+        padding: 0;
+        li {
+          margin: 0;
+          cursor: pointer;
+          color: var(--primary-black-color);
+          border-radius: 4px;
+          font-weight: 500;
+          font-size: 16px;
+          padding: 14px 20px;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          i {
+            width: 20px;
+            height: 20px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+          }
+          &:hover {
+            color: var(--primary-red-color);
+            i {
+              color: var(--primary-red-color);
+            }
+          }
+          &.active {
+            background-color: var(--primary-menu-bg-color);
+            border-radius: 4px;
+            padding: 14px 20px;
+            color: var(--primary-black-color);
+
+            i {
+              color: var(--primary-red-color);
+            }
+          }
+          @media (max-width: 1280px) {
+            font-size: 14px;
+            i {
+              width: 16px;
+              height: 16px;
+              font-size: 14px;
+            }
+          }
+        }
+      }
+    }
+
+    .sidebar-footer {
+      margin-top: auto;
+      margin-bottom: 20px;
+      li {
+        list-style: none;
+        margin: 0;
+        cursor: pointer;
+        color: var(--primary-black-color);
+        border-radius: 4px;
+        font-weight: 500;
+        font-size: 16px;
+        padding: 14px 20px;
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        i {
+          width: 20px;
+          height: 20px;
+          font-size: 16px;
+          transition: all 0.3s ease;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+        }
+
+        &:hover {
+          color: var(--primary-red-color);
+        }
+
+        &.active {
+          background-color: var(--primary-menu-bg-color);
+          border-radius: 4px;
+          padding: 14px 20px;
+          color: var(--primary-black-color);
+
+          i {
+            color: var(--primary-red-color);
+          }
+        }
+        @media (max-width: 1280px) {
+          font-size: 14px;
+          i {
+            width: 16px;
+            height: 16px;
+          }
+        }
+      }
+    }
+  }
+
+  // Mobile sidebar overlay
+  .mobile-sidebar-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+  }
+
+  // Mobile responsive styles
+  @media (max-width: 768px) {
+    width: 0;
+    left: -100%;
+    top: 0;
+    height: 100vh;
+    transition: left 0.3s ease;
+    z-index: 1000;
+    border-right: 1px solid var(--primary-menu-bg-color);
+    border-left: none;
+    background-color: var(--primary-white-color);
+
+    .top-side {
+      padding: 15px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+
+      i.desktop-toggle {
+        display: none;
+      }
+
+      .birsayt-logo {
+        width: 100px;
+        height: 50px;
+        object-fit: contain;
+        margin-left: 0;
+        margin-right: 0;
+      }
+
+      i.mobile-close {
+        display: none; // Kapananda gizli
+      }
+    }
+
+    // Sidebar açılanda
+    &.mobile-open {
+      width: 70% !important;
+      left: 0 !important;
+
+      .top-side {
+        i.mobile-close {
+          display: block !important; // Açılanda görünür
+        }
+      }
+
+      .mobile-sidebar-overlay {
+        display: block;
+      }
+    }
+
+    // Desktop closed state override
+    &.closed {
+      width: 0;
+      left: -100%;
+    }
+
+    .sidebar-content {
+      width: 100%;
+    }
+  }
+}

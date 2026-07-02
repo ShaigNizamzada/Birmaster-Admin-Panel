@@ -1,0 +1,354 @@
+.profile-page-section {
+  padding: 40px 24px 0 12px;
+
+  h3 {
+    margin-bottom: 24px;
+    color: var(--primary-black-color);
+    font-weight: 500;
+    font-size: 20px;
+    line-height: 30px;
+  }
+
+  .profile-information-section {
+    background-color: var(--primary-white-color);
+    border-radius: 12px;
+    padding: 32px 40px;
+
+    .profile-photo-section {
+      display: flex;
+      align-items: center;
+      gap: 20px;
+
+      .left {
+        img {
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          border-radius: 50%;
+          padding: 5px;
+          width: 100px;
+          height: 100px;
+          object-fit: cover;
+        }
+      }
+
+      .right {
+        display: flex;
+        justify-content: center;
+        flex-direction: column;
+        gap: 20px;
+
+        h6 {
+          margin-bottom: 0;
+          color: var(--primary-black-color);
+          font-size: 20px;
+          line-height: 30px;
+          font-weight: 500;
+        }
+
+        .button-section {
+          display: flex;
+          align-items: center;
+          flex-wrap: wrap;
+          gap: 8px;
+
+          .change-photo {
+            background-color: var(--primary-black-color);
+            color: var(--primary-white-color);
+            border: 1px solid var(--primary-black-color);
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 21px;
+            transition: all 0.3s ease;
+
+            &:hover {
+              background-color: var(--primary-white-color);
+              color: var(--primary-black-color);
+            }
+
+            @media (max-width: 480px) {
+              width: 100%;
+            }
+          }
+
+          .delete-photo {
+            background-color: #ffc9c9;
+            color: var(--primary-black-color);
+            border: 1px solid var(--secondary-alert-color);
+            border-radius: 8px;
+            padding: 8px 16px;
+            font-weight: 500;
+            font-size: 14px;
+            line-height: 21px;
+            transition: all 0.3s ease;
+
+            &:hover {
+              background-color: var(--primary-white-color);
+              color: var(--primary-black-color);
+            }
+
+            @media (max-width: 480px) {
+              width: 100%;
+            }
+          }
+        }
+      }
+    }
+
+    .personal-information-section {
+      margin: 40px 0;
+
+      .row {
+        .left-section {
+          .col-xxl-4 {
+            h4 {
+              color: var(--primary-black-color);
+              font-weight: 500;
+              font-size: 20px;
+              line-height: 30px;
+            }
+          }
+        }
+
+        .right-section {
+          form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+
+            .col-12 {
+              display: flex;
+              flex-direction: column;
+              gap: 8px;
+
+              label {
+                color: var(--primary-text-grey-color);
+                font-weight: 500;
+                font-size: 16px;
+                line-height: 24px;
+              }
+
+              input {
+                border: 1px solid var(--primary-stroke-color);
+                border-radius: 6px;
+                padding: 12px 16px;
+                font-weight: 400;
+                font-size: 14px;
+                line-height: 21px;
+                color: var(--primary-black-color);
+                background-color: var(--primary-bg-color);
+                outline: none;
+
+                &:focus {
+                  background-color: var(--primary-bg-color);
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .password-information-section {
+      margin: 40px 0;
+
+      .row {
+        .left-section {
+          .col-xxl-4 {
+            h4 {
+              color: var(--primary-black-color);
+              font-weight: 500;
+              font-size: 20px;
+              line-height: 30px;
+            }
+          }
+        }
+
+        .right-section {
+          form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+
+            .col-12 {
+              display: flex;
+              flex-direction: column;
+              gap: 8px;
+
+              label {
+                color: var(--primary-text-grey-color);
+                font-weight: 500;
+                font-size: 16px;
+                line-height: 24px;
+              }
+
+              .password-input-section {
+                position: relative;
+                width: 100%;
+
+                input {
+                  width: 100%;
+                  border: 1px solid var(--primary-stroke-color);
+                  border-radius: 6px;
+                  padding: 12px 40px 12px 16px;
+                  font-weight: 400;
+                  font-size: 14px;
+                  line-height: 21px;
+                  color: var(--primary-black-color);
+                  background-color: var(--primary-bg-color);
+                  outline: none;
+
+                  &:focus {
+                    background-color: var(--primary-bg-color);
+                  }
+                }
+
+                i {
+                  position: absolute;
+                  right: 16px;
+                  top: 50%;
+                  transform: translateY(-50%);
+                  cursor: pointer;
+                  color: var(--primary-text-grey-color);
+                  font-size: 16px;
+                  transition: color 0.2s ease;
+
+                  &:hover {
+                    color: var(--primary-black-color);
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+
+    .delete-account-information-section {
+      margin: 40px 0;
+
+      .left-section {
+        h4 {
+          color: var(--primary-black-color);
+          font-weight: 500;
+          font-size: 20px;
+          line-height: 30px;
+        }
+      }
+
+      .right-section {
+        h6 {
+          margin-bottom: 24px;
+          color: var(--primary-text-grey-color);
+          font-weight: 500;
+          font-size: 16px;
+          line-height: 24px;
+        }
+
+        .delete-account {
+          background-color: var(--secondary-alert-color);
+          color: var(--primary-white-color);
+          border: 1px solid var(--secondary-alert-color);
+          border-radius: 8px;
+          padding: 10px 16px;
+          font-weight: 500;
+          font-size: 14px;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background-color: var(--tertiary-red-color);
+            color: var(--primary-black-color);
+          }
+        }
+      }
+    }
+
+    .save-information-section {
+      .right-section {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+
+        .cancel-information {
+          background-color: var(--primary-menu-bg-color);
+          color: var(--primary-black-color);
+          border: 1px solid var(--primary-stroke-color);
+          border-radius: 8px;
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 21px;
+          padding: 8px 16px;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background-color: var(--primary-white-color);
+          }
+
+          &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+          }
+        }
+
+        .save-information {
+          background-color: var(--primary-menu-bg-color);
+          color: var(--primary-black-color);
+          border: 1px solid var(--primary-stroke-color);
+          border-radius: 8px;
+          font-weight: 500;
+          font-size: 14px;
+          line-height: 21px;
+          padding: 8px 16px;
+          transition: all 0.3s ease;
+
+          &:hover {
+            background-color: var(--primary-white-color);
+          }
+
+          &:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+          }
+        }
+      }
+    }
+
+    .alert-section {
+      margin: 20px 0;
+      padding: 12px 16px;
+      border-radius: 8px;
+
+      &.error {
+        background-color: #fee;
+        border: 1px solid #fcc;
+        color: #c33;
+      }
+
+      &.success {
+        background-color: #efe;
+        border: 1px solid #cfc;
+        color: #363;
+      }
+
+      p {
+        margin: 0;
+        font-weight: 500;
+        font-size: 14px;
+      }
+    }
+
+    @media (max-width: 768px) {
+      padding: 12px 16px;
+    }
+  }
+}
+
+
+@media (max-width: 768px) {
+  .profile-page-section {
+    padding: 12px 0;
+  }
+}

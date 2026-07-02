@@ -1,0 +1,41 @@
+// Pages
+
+// Font Awesome
+@import "https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css";
+body {
+  font-family: "DM Sans", serif;
+  overflow-x: hidden !important;
+  background-color: var(--primary-bg-color);
+}
+.App {
+  overflow-x: hidden;
+  margin: 0 auto;
+  max-width: 1920px !important;
+  width: 100% !important;
+}
+:root {
+  --primary-bg-color: #f9fafb;
+  --primary-white-color: #ffffff;
+  --primary-black-color: #0a0a0a;
+  --primary-stroke-color: #e7e7e7;
+  --primary-text-grey-color: #9a9a9a;
+  --primary-menu-bg-color: #f0f1f5;
+  --primary-red-color: #f9071d;
+  --secondary-alert-color: #e20000;
+  --secondary-green-color: #0db56f;
+  --secondary-navy-blue-color: #0075fb;
+  --secondary-blue-color: #00d9ff;
+  --secondary-yellow-color: #fa9f42;
+  --tertiary-red-color: #fde6e6;
+  --tertiary-green-color: #ecfdf3;
+  --tertiary-yellow-color: #fef5eb;
+  --tertiary-blue-color: #e8fcff;
+  --tertiary-navy-blue-color: #e3f0ff;
+  --frontend-color: #fa9f42;
+  --dizayn-color: #ff9add;
+  --wordpress-color: #9b88ed;
+  --disable-text-color: #949494;
+}
+.link {
+  text-decoration: none;
+}

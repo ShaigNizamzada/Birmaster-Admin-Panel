@@ -1,0 +1,109 @@
+.header {
+  height: 80px;
+  background-color: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 15%;
+  z-index: 20;
+  transition: all 0.3s ease;
+
+  .content-wrapper.closed & {
+    left: 5%;
+  }
+
+  .header-content {
+    height: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0 24px 0 32px;
+
+    .left-content {
+      position: relative;
+      display: flex;
+      align-items: center;
+      gap: 15px;
+
+      .mobile-menu-icon {
+        display: none;
+        font-size: 20px;
+        color: var(--primary-black-color);
+        cursor: pointer;
+      }
+
+      input {
+        height: 40px;
+        outline: none;
+        width: 300px;
+        border: 1px solid var(--primary-menu-bg-color);
+        border-radius: 8px;
+        padding: 0 16px 0 12px;
+        font-size: 16px;
+        color: #000;
+        background-color: var(--primary-bg-color);
+      }
+
+      ::placeholder {
+        color: var(--primary-text-grey-color);
+        font-weight: 400;
+        font-size: 14px;
+        line-height: 22px;
+      }
+
+      img {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%);
+        cursor: pointer;
+      }
+    }
+
+    .right-content {
+      .profile-section {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        border: 1px solid var(--primary-stroke-color);
+        border-radius: 50%;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+
+        i {
+          font-size: 20px;
+          color: var(--primary-black-color);
+          cursor: pointer;
+        }
+      }
+    }
+  }
+
+  // Mobile responsive styles
+  @media (max-width: 768px) {
+    left: 0;
+    width: 100%;
+
+    .header-content {
+      .left-content {
+        .mobile-menu-icon {
+          display: block;
+        }
+
+        input {
+          width: 200px;
+        }
+      }
+    }
+
+    .content-wrapper.closed & {
+      left: 0;
+    }
+
+    .content-wrapper.mobile-sidebar-open & {
+      left: 0;
+    }
+  }
+}
