@@ -2,7 +2,7 @@ import React, { useContext, createContext } from "react";
 import BirsaytLogo from "../../assets/images/Logo.webp";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useCookies } from "react-cookie";
-import "./_Sidebar.scss";
+import "./Sidebar.scss";
 import { toast } from "react-toastify";
 
 export const SidebarContext = createContext();
@@ -77,17 +77,18 @@ const Sidebar = () => {
                 <span>Dashboard</span>
               </li>
             </Link>{" "}
+            <Link to="/packages" className="link" onClick={handleMenuItemClick}>
+              <li className={isActive("/packages") ? "active" : ""}>
+                <i className="fa-solid fa-box"></i> <span>Packages</span>
+              </li>
+            </Link>{" "}
             <Link to="/products" className="link" onClick={handleMenuItemClick}>
               <li className={isActive("/products") ? "active" : ""}>
                 <i className="fa-solid fa-boxes-packing"></i>
                 <span>Products</span>
               </li>
             </Link>{" "}
-            <Link to="/blogs" className="link" onClick={handleMenuItemClick}>
-              <li className={isActive("/blogs") ? "active" : ""}>
-                <i className="fa-solid fa-blog"></i> <span>Blogs</span>
-              </li>
-            </Link>{" "}
+
             <Link to="/orders" className="link" onClick={handleMenuItemClick}>
               <li className={isActive("/orders") ? "active" : ""}>
                 <i className="fa-solid fa-shopping-cart"></i> <span>Orders</span>

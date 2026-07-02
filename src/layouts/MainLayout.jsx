@@ -2,7 +2,7 @@ import React from "react";
 import Header from "../components/Header/Header";
 import Sidebar, { SidebarContext } from "../components/Sidebar/Sidebar";
 import { useState } from "react";
-import "./_MainLayout.scss";
+import "./MainLayout.scss";
 
 const MainLayout = ({ children }) => {
   const [isOpen, setIsOpen] = useState(true);
@@ -23,9 +23,8 @@ const MainLayout = ({ children }) => {
       <div className="main-layout">
         <Sidebar />
         <div
-          className={`content-wrapper ${!isOpen ? "closed" : ""} ${
-            isMobileOpen ? "mobile-sidebar-open" : ""
-          }`}
+          className={`content-wrapper ${!isOpen ? "closed" : ""} ${isMobileOpen ? "mobile-sidebar-open" : ""
+            }`}
         >
           <Header />
           <main className="main-content">{children}</main>

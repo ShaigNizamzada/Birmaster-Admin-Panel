@@ -8,7 +8,7 @@ import Orders from "../pages/Orders/Orders";
 import Contacts from "../pages/Contacts/Contacts";
 import Profile from "../pages/Profile/Profile";
 import Settings from "../pages/Settings/Settings";
-import Blogs from "../pages/Blogs/Blogs";
+import Packages from "../pages/Packages/Packages";
 
 const WithLayout = ({ component: Component }) => {
   return (
@@ -33,7 +33,7 @@ const AppContent = () => {
             path="/products"
             element={<WithLayout component={Products} />}
           />
-          <Route path="/blogs" element={<WithLayout component={Blogs} />} />
+          <Route path="/packages" element={<WithLayout component={Packages} />} />
           <Route path="/orders" element={<WithLayout component={Orders} />} />
           <Route
             path="/contacts"
