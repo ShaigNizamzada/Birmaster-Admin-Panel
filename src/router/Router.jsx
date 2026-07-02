@@ -10,6 +10,7 @@ import Profile from "../pages/Profile/Profile";
 import Settings from "../pages/Settings/Settings";
 import Packages from "../pages/Packages/Packages";
 import Services from "../pages/Services/Services";
+import Campaigns from "../pages/Campaigns/Campaigns";
 
 const WithLayout = ({ component: Component }) => {
   return (
@@ -37,6 +38,7 @@ const AppContent = () => {
           <Route path="/packages" element={<WithLayout component={Packages} />} />
           <Route path="/services" element={<WithLayout component={Services} />} />
           <Route path="/orders" element={<WithLayout component={Orders} />} />
+          <Route path="/campaigns" element={<WithLayout component={Campaigns} />} />
           <Route
             path="/contacts"
             element={<WithLayout component={Contacts} />}
