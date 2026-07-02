@@ -517,6 +517,44 @@
     flex-direction: column;
     gap: 16px;
 
+    .form-section {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 16px;
+      border: 1px solid #ececec;
+      border-radius: 10px;
+      background-color: #fafafa;
+    }
+
+    .form-section-title {
+      margin: 0;
+      font-size: 15px;
+      font-weight: 600;
+      color: var(--primary-black-color);
+      padding-bottom: 4px;
+      border-bottom: 1px solid #e8e8e8;
+    }
+
+    .form-grid {
+      display: grid;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+      gap: 12px;
+
+      @media screen and (max-width: 992px) {
+        grid-template-columns: 1fr;
+      }
+    }
+
+    .product-category-select {
+      width: 100%;
+
+      .ant-select-selector {
+        border-radius: 8px !important;
+        min-height: 44px !important;
+      }
+    }
+
     .form-row {
       display: grid;
       grid-template-columns: 1fr 1fr;
