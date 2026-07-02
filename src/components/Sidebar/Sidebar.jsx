@@ -79,34 +79,34 @@ const Sidebar = () => {
             </Link>{" "}
             <Link to="/packages" className="link" onClick={handleMenuItemClick}>
               <li className={isActive("/packages") ? "active" : ""}>
-                <i className="fa-solid fa-box"></i> <span>Packages</span>
+                <i className="fa-solid fa-box"></i> <span>Paketlər</span>
               </li>
             </Link>{" "}
             <Link to="/services" className="link" onClick={handleMenuItemClick}>
               <li className={isActive("/services") ? "active" : ""}>
-                <i className="fa-solid fa-screwdriver-wrench"></i> <span>Services</span>
+                <i className="fa-solid fa-screwdriver-wrench"></i> <span>Xidmətlər</span>
               </li>
             </Link>{" "}
             <Link to="/products" className="link" onClick={handleMenuItemClick}>
               <li className={isActive("/products") ? "active" : ""}>
                 <i className="fa-solid fa-boxes-packing"></i>
-                <span>Products</span>
+                <span>Məhsul</span>
               </li>
             </Link>{" "}
 
             <Link to="/orders" className="link" onClick={handleMenuItemClick}>
               <li className={isActive("/orders") ? "active" : ""}>
-                <i className="fa-solid fa-shopping-cart"></i> <span>Orders</span>
+                <i className="fa-solid fa-shopping-cart"></i> <span>Sifarişlər</span>
               </li>
             </Link>{" "}
             <Link to="/contacts" className="link" onClick={handleMenuItemClick}>
               <li className={isActive("/contacts") ? "active" : ""}>
-                <i className="fa-solid fa-envelope"></i> <span>Contacts</span>
+                <i className="fa-solid fa-envelope"></i> <span>Əlaqələr</span>
               </li>
             </Link>{" "}
             <Link to="/settings" className="link" onClick={handleMenuItemClick}>
               <li className={isActive("/settings") ? "active" : ""}>
-                <i className="fa-solid fa-gear"></i> <span>Settings</span>
+                <i className="fa-solid fa-gear"></i> <span>Tənzimləmələr</span>
               </li>
             </Link>
           </ul>

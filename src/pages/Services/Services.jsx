@@ -293,11 +293,11 @@ const Services = () => {
         <div className="services-page-section">
             <div className="top-section">
                 <div className="title-section">
-                    <h1>Services</h1>
+                    <h1>Xidmətlər</h1>
                 </div>
                 <div className="button-section">
                     <button className="addition-button" onClick={openAddModal}>
-                        + Kateqoriya əlavə et
+                        + Əlavə et
                     </button>
                 </div>
             </div>
@@ -355,14 +355,14 @@ const Services = () => {
                                                         className="table-action-btn items"
                                                         onClick={() => toggleExpand(service.id)}
                                                     >
-                                                        {isExpanded ? "Gizlət" : "Itemlər"}
+                                                        {isExpanded ? "Gizlət" : "Alt xidmətlər"}
                                                     </button>
                                                     <button
                                                         type="button"
                                                         className="table-action-btn add-item"
                                                         onClick={() => openAddItemModal(service)}
                                                     >
-                                                        + Item
+                                                        + Alt xidmət
                                                     </button>
                                                     <button
                                                         type="button"
@@ -386,13 +386,13 @@ const Services = () => {
                                                 <td colSpan="8">
                                                     <div className="items-section">
                                                         <div className="items-section-header">
-                                                            <h4>{service.nameAz} — Itemlər</h4>
+                                                            <h4>{service.nameAz} — Alt xidmətlər</h4>
                                                             <button
                                                                 type="button"
                                                                 className="table-action-btn add-item"
                                                                 onClick={() => openAddItemModal(service)}
                                                             >
-                                                                + Item əlavə et
+                                                                + Alt xidmət əlavə et
                                                             </button>
                                                         </div>
                                                         {serviceItems.length > 0 ? (
@@ -538,7 +538,7 @@ const Services = () => {
                     <div className="modal-content" onClick={(e) => e.stopPropagation()}>
                         <div className="modal-header">
                             <h2>
-                                {editingItem ? "Item-i Dəyişdir" : "Yeni Item"} — {activeService?.nameAz}
+                                {editingItem ? "Alt xidmət-i Dəyişdir" : "Yeni Alt xidmət"} — {activeService?.nameAz}
                             </h2>
                             <button className="close-button" onClick={handleItemModalClose}>
                                 &times;
