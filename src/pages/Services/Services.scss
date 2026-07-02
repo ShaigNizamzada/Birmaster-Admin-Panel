@@ -75,6 +75,19 @@
             border: 1px solid transparent;
             font-size: 12px;
             cursor: pointer;
+            white-space: nowrap;
+
+            &.items {
+                background-color: #f0f0f0;
+                color: #333;
+                border-color: #ccc;
+            }
+
+            &.add-item {
+                background-color: #e8f4ea;
+                color: #1b5e20;
+                border-color: #a5d6a7;
+            }
 
             &.edit {
                 background-color: #fff;
@@ -87,6 +100,72 @@
                 color: #fff;
                 border-color: #dc3545;
             }
+        }
+
+        tr.items-row {
+            background-color: #f9f9f9;
+
+            &:hover {
+                background-color: #f9f9f9;
+            }
+
+            > td {
+                padding: 0;
+                border-bottom: 1px solid #e5e5e5;
+            }
+        }
+    }
+
+    .items-section {
+        padding: 16px 20px 20px;
+
+        .items-section-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            gap: 12px;
+
+            h4 {
+                margin: 0;
+                font-size: 14px;
+                font-weight: 600;
+                color: #333;
+            }
+        }
+
+        .no-items-text {
+            margin: 0;
+            font-size: 13px;
+            color: #888;
+            font-style: italic;
+        }
+    }
+
+    .items-table {
+        width: 100%;
+        border-collapse: collapse;
+        background: #fff;
+        border: 1px solid #e8e8e8;
+        border-radius: 8px;
+        overflow: hidden;
+
+        th,
+        td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #eee;
+            text-align: left;
+            font-size: 13px;
+            min-width: 100px;
+        }
+
+        th {
+            background-color: #f3f3f3;
+            font-weight: 600;
+        }
+
+        tr:last-child td {
+            border-bottom: none;
         }
     }
 
@@ -163,6 +242,10 @@
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap: 12px;
+
+        &.form-grid-2 {
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+        }
 
         @media screen and (max-width: 992px) {
             grid-template-columns: 1fr;

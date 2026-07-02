@@ -11,6 +11,14 @@ const initialFormData = {
     iconFile: null,
 };
 
+const initialItemFormData = {
+    titleAz: "",
+    titleEn: "",
+    titleRu: "",
+    individualPrice: "",
+    corporatePrice: "",
+};
+
 const Services = () => {
     const [cookies] = useCookies(["token"]);
     const token = cookies?.token;
@@ -27,6 +35,13 @@ const Services = () => {
     const [editingService, setEditingService] = useState(null);
     const [formData, setFormData] = useState(initialFormData);
     const [imagePreview, setImagePreview] = useState(null);
+
+    const [expandedServiceId, setExpandedServiceId] = useState(null);
+    const [isItemModalOpen, setIsItemModalOpen] = useState(false);
+    const [isItemSubmitting, setIsItemSubmitting] = useState(false);
+    const [activeService, setActiveService] = useState(null);
+    const [editingItem, setEditingItem] = useState(null);
+    const [itemFormData, setItemFormData] = useState(initialItemFormData);
 
     const fetchServices = async () => {
         setIsLoading(true);
@@ -48,6 +63,14 @@ const Services = () => {
     const handleInputChange = (e) => {
         const { name, value } = e.target;
         setFormData((prev) => ({
+            ...prev,
+            [name]: value,
+        }));
+    };
+
+    const handleItemInputChange = (e) => {
+        const { name, value } = e.target;
+        setItemFormData((prev) => ({
             ...prev,
             [name]: value,
         }));
@@ -77,6 +100,13 @@ const Services = () => {
         setImagePreview(null);
     };
 
+    const handleItemModalClose = () => {
+        setIsItemModalOpen(false);
+        setActiveService(null);
+        setEditingItem(null);
+        setItemFormData(initialItemFormData);
+    };
+
     const openAddModal = () => {
         setEditingService(null);
         setFormData(initialFormData);
@@ -96,6 +126,30 @@ const Services = () => {
             service?.iconPath ? `${import.meta.env.VITE_API_URL}${service.iconPath}` : null
         );
         setIsModalOpen(true);
+    };
+
+    const openAddItemModal = (service) => {
+        setActiveService(service);
+        setEditingItem(null);
+        setItemFormData(initialItemFormData);
+        setIsItemModalOpen(true);
+    };
+
+    const openEditItemModal = (service, item) => {
+        setActiveService(service);
+        setEditingItem(item);
+        setItemFormData({
+            titleAz: item?.titleAz || "",
+            titleEn: item?.titleEn || "",
+            titleRu: item?.titleRu || "",
+            individualPrice: item?.individualPrice ?? "",
+            corporatePrice: item?.corporatePrice ?? "",
+        });
+        setIsItemModalOpen(true);
+    };
+
+    const toggleExpand = (serviceId) => {
+        setExpandedServiceId((prev) => (prev === serviceId ? null : serviceId));
     };
 
     const uploadIconAndGetPath = async (file) => {
@@ -165,6 +219,45 @@ const Services = () => {
         }
     };
 
+    const handleItemSubmit = async (e) => {
+        e.preventDefault();
+        if (!activeService?.id) return;
+
+        setIsItemSubmitting(true);
+        try {
+            const payload = {
+                serviceCategoryId: activeService.id,
+                titleAz: itemFormData.titleAz.trim(),
+                titleEn: itemFormData.titleEn.trim(),
+                titleRu: itemFormData.titleRu.trim(),
+                individualPrice: Number(itemFormData.individualPrice),
+                corporatePrice: Number(itemFormData.corporatePrice),
+            };
+
+            if (editingItem?.id) {
+                await axios.put(
+                    `${import.meta.env.VITE_API_URL}/api/Services/item/${editingItem.id}`,
+                    payload,
+                    { headers: authHeaders }
+                );
+            } else {
+                await axios.post(
+                    `${import.meta.env.VITE_API_URL}/api/Services/item`,
+                    payload,
+                    { headers: authHeaders }
+                );
+            }
+
+            await fetchServices();
+            handleItemModalClose();
+        } catch (error) {
+            console.error("Failed to save service item:", error);
+            alert(`Item ${editingItem ? "yenilənmədi" : "yaradılmadı"}. Xəta baş verdi.`);
+        } finally {
+            setIsItemSubmitting(false);
+        }
+    };
+
     const handleDelete = async (id) => {
         if (!window.confirm("Bu kateqoriyanı silməyə əminsiniz?")) return;
         try {
@@ -172,10 +265,27 @@ const Services = () => {
                 `${import.meta.env.VITE_API_URL}/api/Services/category/${id}`,
                 { headers: authHeaders }
             );
+            if (expandedServiceId === id) {
+                setExpandedServiceId(null);
+            }
             await fetchServices();
         } catch (error) {
             console.error("Failed to delete service category:", error);
             alert("Kateqoriya silinmədi. Xəta baş verdi.");
+        }
+    };
+
+    const handleDeleteItem = async (itemId) => {
+        if (!window.confirm("Bu item-i silməyə əminsiniz?")) return;
+        try {
+            await axios.delete(
+                `${import.meta.env.VITE_API_URL}/api/Services/item/${itemId}`,
+                { headers: authHeaders }
+            );
+            await fetchServices();
+        } catch (error) {
+            console.error("Failed to delete service item:", error);
+            alert("Item silinmədi. Xəta baş verdi.");
         }
     };
 
@@ -187,7 +297,7 @@ const Services = () => {
                 </div>
                 <div className="button-section">
                     <button className="addition-button" onClick={openAddModal}>
-                        + Əlavə et
+                        + Kateqoriya əlavə et
                     </button>
                 </div>
             </div>
@@ -201,6 +311,7 @@ const Services = () => {
                             <th>Ad (AZ)</th>
                             <th>Ad (EN)</th>
                             <th>Ad (RU)</th>
+                            <th>Item sayı</th>
                             <th>Paket sayı</th>
                             <th>Əməliyyatlar</th>
                         </tr>
@@ -208,52 +319,139 @@ const Services = () => {
                     <tbody>
                         {isLoading ? (
                             <tr>
-                                <td colSpan="7" className="loading-cell">
+                                <td colSpan="8" className="loading-cell">
                                     <LoadingSpinner />
                                 </td>
                             </tr>
                         ) : services.length > 0 ? (
-                            services.map((service) => (
-                                <tr key={service.id}>
-                                    <td>{service.id}</td>
-                                    <td>
-                                        {service.iconPath ? (
-                                            <img
-                                                className="service-icon"
-                                                src={`${import.meta.env.VITE_API_URL}${service.iconPath}`}
-                                                alt={service.nameAz || "Service icon"}
-                                            />
-                                        ) : (
-                                            <span className="no-icon">Yoxdur</span>
+                            services.map((service) => {
+                                const serviceItems = Array.isArray(service.services) ? service.services : [];
+                                const isExpanded = expandedServiceId === service.id;
+
+                                return (
+                                    <React.Fragment key={service.id}>
+                                        <tr>
+                                            <td>{service.id}</td>
+                                            <td>
+                                                {service.iconPath ? (
+                                                    <img
+                                                        className="service-icon"
+                                                        src={`${import.meta.env.VITE_API_URL}${service.iconPath}`}
+                                                        alt={service.nameAz || "Service icon"}
+                                                    />
+                                                ) : (
+                                                    <span className="no-icon">Yoxdur</span>
+                                                )}
+                                            </td>
+                                            <td>{service.nameAz || "-"}</td>
+                                            <td>{service.nameEn || "-"}</td>
+                                            <td>{service.nameRu || "-"}</td>
+                                            <td>{serviceItems.length}</td>
+                                            <td>{Array.isArray(service.packages) ? service.packages.length : 0}</td>
+                                            <td>
+                                                <div className="actions-cell">
+                                                    <button
+                                                        type="button"
+                                                        className="table-action-btn items"
+                                                        onClick={() => toggleExpand(service.id)}
+                                                    >
+                                                        {isExpanded ? "Gizlət" : "Itemlər"}
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        className="table-action-btn add-item"
+                                                        onClick={() => openAddItemModal(service)}
+                                                    >
+                                                        + Item
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        className="table-action-btn edit"
+                                                        onClick={() => openEditModal(service)}
+                                                    >
+                                                        Redaktə
+                                                    </button>
+                                                    <button
+                                                        type="button"
+                                                        className="table-action-btn delete"
+                                                        onClick={() => handleDelete(service.id)}
+                                                    >
+                                                        Sil
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        {isExpanded && (
+                                            <tr className="items-row">
+                                                <td colSpan="8">
+                                                    <div className="items-section">
+                                                        <div className="items-section-header">
+                                                            <h4>{service.nameAz} — Itemlər</h4>
+                                                            <button
+                                                                type="button"
+                                                                className="table-action-btn add-item"
+                                                                onClick={() => openAddItemModal(service)}
+                                                            >
+                                                                + Item əlavə et
+                                                            </button>
+                                                        </div>
+                                                        {serviceItems.length > 0 ? (
+                                                            <table className="items-table">
+                                                                <thead>
+                                                                    <tr>
+                                                                        <th>ID</th>
+                                                                        <th>Başlıq (AZ)</th>
+                                                                        <th>Başlıq (EN)</th>
+                                                                        <th>Başlıq (RU)</th>
+                                                                        <th>Fərdi qiymət</th>
+                                                                        <th>Korporativ qiymət</th>
+                                                                        <th>Əməliyyatlar</th>
+                                                                    </tr>
+                                                                </thead>
+                                                                <tbody>
+                                                                    {serviceItems.map((item) => (
+                                                                        <tr key={item.id}>
+                                                                            <td>{item.id}</td>
+                                                                            <td>{item.titleAz || "-"}</td>
+                                                                            <td>{item.titleEn || "-"}</td>
+                                                                            <td>{item.titleRu || "-"}</td>
+                                                                            <td>{item.individualPrice ?? "-"}</td>
+                                                                            <td>{item.corporatePrice ?? "-"}</td>
+                                                                            <td>
+                                                                                <div className="actions-cell">
+                                                                                    <button
+                                                                                        type="button"
+                                                                                        className="table-action-btn edit"
+                                                                                        onClick={() => openEditItemModal(service, item)}
+                                                                                    >
+                                                                                        Redaktə
+                                                                                    </button>
+                                                                                    <button
+                                                                                        type="button"
+                                                                                        className="table-action-btn delete"
+                                                                                        onClick={() => handleDeleteItem(item.id)}
+                                                                                    >
+                                                                                        Sil
+                                                                                    </button>
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                    ))}
+                                                                </tbody>
+                                                            </table>
+                                                        ) : (
+                                                            <p className="no-items-text">Bu kateqoriyada hələ item yoxdur.</p>
+                                                        )}
+                                                    </div>
+                                                </td>
+                                            </tr>
                                         )}
-                                    </td>
-                                    <td>{service.nameAz || "-"}</td>
-                                    <td>{service.nameEn || "-"}</td>
-                                    <td>{service.nameRu || "-"}</td>
-                                    <td>{Array.isArray(service.packages) ? service.packages.length : 0}</td>
-                                    <td>
-                                        <div className="actions-cell">
-                                            <button
-                                                type="button"
-                                                className="table-action-btn edit"
-                                                onClick={() => openEditModal(service)}
-                                            >
-                                                Redaktə et
-                                            </button>
-                                            <button
-                                                type="button"
-                                                className="table-action-btn delete"
-                                                onClick={() => handleDelete(service.id)}
-                                            >
-                                                Sil
-                                            </button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            ))
+                                    </React.Fragment>
+                                );
+                            })
                         ) : (
                             <tr>
-                                <td colSpan="7" className="no-data-cell">
+                                <td colSpan="8" className="no-data-cell">
                                     Service tapılmadı
                                 </td>
                             </tr>
@@ -328,6 +526,98 @@ const Services = () => {
                                 </button>
                                 <button type="submit" className="primary" disabled={isSubmitting}>
                                     {isSubmitting ? "Göndərilir..." : editingService ? "Dəyişdir" : "Yarat"}
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            )}
+
+            {isItemModalOpen && (
+                <div className="modal-overlay" onClick={handleItemModalClose}>
+                    <div className="modal-content" onClick={(e) => e.stopPropagation()}>
+                        <div className="modal-header">
+                            <h2>
+                                {editingItem ? "Item-i Dəyişdir" : "Yeni Item"} — {activeService?.nameAz}
+                            </h2>
+                            <button className="close-button" onClick={handleItemModalClose}>
+                                &times;
+                            </button>
+                        </div>
+                        <form className="modal-body" onSubmit={handleItemSubmit}>
+                            <div className="form-grid">
+                                <div className="form-group">
+                                    <label htmlFor="titleAz">Başlıq (AZ) *</label>
+                                    <input
+                                        id="titleAz"
+                                        name="titleAz"
+                                        type="text"
+                                        value={itemFormData.titleAz}
+                                        onChange={handleItemInputChange}
+                                        required
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="titleEn">Başlıq (EN) *</label>
+                                    <input
+                                        id="titleEn"
+                                        name="titleEn"
+                                        type="text"
+                                        value={itemFormData.titleEn}
+                                        onChange={handleItemInputChange}
+                                        required
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="titleRu">Başlıq (RU) *</label>
+                                    <input
+                                        id="titleRu"
+                                        name="titleRu"
+                                        type="text"
+                                        value={itemFormData.titleRu}
+                                        onChange={handleItemInputChange}
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="form-grid form-grid-2">
+                                <div className="form-group">
+                                    <label htmlFor="individualPrice">Fərdi qiymət *</label>
+                                    <input
+                                        id="individualPrice"
+                                        name="individualPrice"
+                                        type="number"
+                                        min="0"
+                                        step="0.01"
+                                        value={itemFormData.individualPrice}
+                                        onChange={handleItemInputChange}
+                                        placeholder="0.00"
+                                        required
+                                    />
+                                </div>
+                                <div className="form-group">
+                                    <label htmlFor="corporatePrice">Korporativ qiymət *</label>
+                                    <input
+                                        id="corporatePrice"
+                                        name="corporatePrice"
+                                        type="number"
+                                        min="0"
+                                        step="0.01"
+                                        value={itemFormData.corporatePrice}
+                                        onChange={handleItemInputChange}
+                                        placeholder="0.00"
+                                        required
+                                    />
+                                </div>
+                            </div>
+
+                            <div className="modal-footer">
+                                <button type="button" onClick={handleItemModalClose}>
+                                    İmtina
+                                </button>
+                                <button type="submit" className="primary" disabled={isItemSubmitting}>
+                                    {isItemSubmitting ? "Göndərilir..." : editingItem ? "Dəyişdir" : "Əlavə et"}
                                 </button>
                             </div>
                         </form>
