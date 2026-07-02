@@ -9,6 +9,7 @@ import Contacts from "../pages/Contacts/Contacts";
 import Profile from "../pages/Profile/Profile";
 import Settings from "../pages/Settings/Settings";
 import Packages from "../pages/Packages/Packages";
+import Services from "../pages/Services/Services";
 
 const WithLayout = ({ component: Component }) => {
   return (
@@ -34,6 +35,7 @@ const AppContent = () => {
             element={<WithLayout component={Products} />}
           />
           <Route path="/packages" element={<WithLayout component={Packages} />} />
+          <Route path="/services" element={<WithLayout component={Services} />} />
           <Route path="/orders" element={<WithLayout component={Orders} />} />
           <Route
             path="/contacts"

@@ -82,6 +82,11 @@ const Sidebar = () => {
                 <i className="fa-solid fa-box"></i> <span>Packages</span>
               </li>
             </Link>{" "}
+            <Link to="/services" className="link" onClick={handleMenuItemClick}>
+              <li className={isActive("/services") ? "active" : ""}>
+                <i className="fa-solid fa-screwdriver-wrench"></i> <span>Services</span>
+              </li>
+            </Link>{" "}
             <Link to="/products" className="link" onClick={handleMenuItemClick}>
               <li className={isActive("/products") ? "active" : ""}>
                 <i className="fa-solid fa-boxes-packing"></i>
