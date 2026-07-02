@@ -5,7 +5,7 @@ import MainLayout from "../layouts/MainLayout";
 import ProtectedRoute from "../utils/ProtectedRoute";
 import Products from "../pages/Products/Products";
 import Orders from "../pages/Orders/Orders";
-import Contacts from "../pages/Contacts/Contacts";
+import Users from "../pages/Users/Users";
 import Profile from "../pages/Profile/Profile";
 import Settings from "../pages/Settings/Settings";
 import Packages from "../pages/Packages/Packages";
@@ -40,8 +40,8 @@ const AppContent = () => {
           <Route path="/orders" element={<WithLayout component={Orders} />} />
           <Route path="/campaigns" element={<WithLayout component={Campaigns} />} />
           <Route
-            path="/contacts"
-            element={<WithLayout component={Contacts} />}
+            path="/users"
+            element={<WithLayout component={Users} />}
           />
           <Route path="/profile" element={<WithLayout component={Profile} />} />
           <Route

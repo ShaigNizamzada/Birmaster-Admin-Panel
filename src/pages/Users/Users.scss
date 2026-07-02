@@ -1,4 +1,4 @@
-.contacts-page-section {
+.users-page-section {
     padding: 20px;
     display: flex;
     flex-direction: column;
@@ -42,7 +42,7 @@
         background-color: transparent !important;
     }
 
-    .contacts-table {
+    .users-table {
         width: 100%;
         border-collapse: collapse;
         background-color: #fff;
@@ -53,58 +53,22 @@
             padding: 12px;
             text-align: left;
             border-bottom: 1px solid #ddd;
-            min-width: 120px;
-            max-width: 250px;
+            min-width: 100px;
+            max-width: 220px;
             overflow: hidden;
             text-overflow: ellipsis;
             white-space: nowrap;
 
             &:first-child {
-                min-width: 60px;
+                min-width: 50px;
             }
 
-            &:nth-child(4),
-            &:nth-child(5) {
-                min-width: 150px;
-            }
-
-            &:nth-child(6) {
-                min-width: 140px;
+            &:nth-child(3) {
+                min-width: 180px;
             }
 
             &:last-child {
-                min-width: 120px;
-                white-space: normal;
-            }
-        }
-
-        .message-cell {
-            max-width: 260px;
-            white-space: normal;
-            word-wrap: break-word;
-            word-break: break-word;
-            text-overflow: clip;
-
-            .message-content {
-                max-height: 4.2em; // təxminən 3 sətir
-                overflow-y: auto;
-                padding-right: 4px;
-                line-height: 1.4;
-            }
-        }
-
-        .message-cell {
-            max-width: 260px;
-            white-space: normal;
-            word-wrap: break-word;
-            word-break: break-word;
-            text-overflow: clip;
-
-            .message-content {
-                max-height: 4.2em; // təxminən 3 sətir
-                overflow-y: auto;
-                padding-right: 4px;
-                line-height: 1.4;
+                min-width: 140px;
             }
         }
 
@@ -134,41 +98,55 @@
             }
         }
 
-        .d-flex {
-            display: flex;
-            flex-wrap: wrap;
+        .balance-cell {
+            font-weight: 600;
+            color: #27ae60;
+        }
 
-            &.gap-2 {
-                gap: 8px;
+        .type-badge,
+        .role-badge,
+        .verified-badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .type-badge {
+            &.individual {
+                color: #2563eb;
+                background-color: #eff6ff;
+            }
+
+            &.corporate {
+                color: #7c3aed;
+                background-color: #f5f3ff;
             }
         }
 
-        .btn {
-            padding: 6px 12px;
-            border: none;
-            border-radius: 4px;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            font-size: 13px;
-            font-weight: 500;
-            white-space: nowrap;
-
-            &:hover {
-                opacity: 0.85;
-                transform: translateY(-1px);
+        .role-badge {
+            &.admin {
+                color: #dc2626;
+                background-color: #fef2f2;
             }
 
-            &:active {
-                transform: translateY(0);
+            &.user {
+                color: #16a34a;
+                background-color: #f0fdf4;
+            }
+        }
+
+        .verified-badge {
+            &.verified {
+                color: #16a34a;
+                background-color: #f0fdf4;
             }
 
-            &.btn-danger {
-                background-color: #dc3545;
-                color: white;
-
-                &:hover {
-                    background-color: #c82333;
-                }
+            &.unverified {
+                color: #ea580c;
+                background-color: #fff7ed;
             }
         }
     }
@@ -209,21 +187,11 @@
     @media screen and (max-width: 768px) {
         padding: 10px;
 
-        .contacts-table {
-
+        .users-table {
             th,
             td {
                 padding: 8px;
-                min-width: 100px;
-
-                &:first-child {
-                    min-width: 50px;
-                }
-            }
-
-            .btn {
-                padding: 4px 8px;
-                font-size: 12px;
+                min-width: 80px;
             }
         }
     }

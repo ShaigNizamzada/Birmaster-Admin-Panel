@@ -104,9 +104,9 @@ const Sidebar = () => {
                 <i className="fa-solid fa-shopping-cart"></i> <span>Sifarişlər</span>
               </li>
             </Link>{" "}
-            <Link to="/contacts" className="link" onClick={handleMenuItemClick}>
-              <li className={isActive("/contacts") ? "active" : ""}>
-                <i className="fa-solid fa-envelope"></i> <span>Əlaqələr</span>
+            <Link to="/users" className="link" onClick={handleMenuItemClick}>
+              <li className={isActive("/users") ? "active" : ""}>
+                <i className="fa-solid fa-users"></i> <span>İstifadəçilər</span>
               </li>
             </Link>{" "}
             <Link to="/settings" className="link" onClick={handleMenuItemClick}>

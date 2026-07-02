@@ -189,6 +189,104 @@
         }
     }
 
+    .status-dropdown-btn {
+        display: inline-flex;
+        padding: 0;
+        border: none;
+        background: transparent;
+        cursor: pointer;
+        line-height: 1;
+        transition: opacity 0.15s ease;
+
+        &:hover:not(:disabled) .status-tag {
+            filter: brightness(0.97);
+        }
+
+        &:disabled {
+            opacity: 0.6;
+            cursor: wait;
+        }
+    }
+
+    .status-tag {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 6px 12px;
+        border-radius: 8px;
+        font-size: 13px;
+        font-weight: 500;
+        line-height: 1;
+        white-space: nowrap;
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .status-tag-arrow {
+            font-size: 10px;
+            margin-left: 2px;
+            opacity: 0.7;
+        }
+
+        &.status-tag-pending {
+            background-color: #fff7ed;
+            color: #ea580c;
+
+            .status-dot {
+                background-color: #ea580c;
+            }
+        }
+
+        &.status-tag-paid {
+            background-color: #eff6ff;
+            color: #2563eb;
+
+            .status-dot {
+                background-color: #2563eb;
+            }
+        }
+
+        &.status-tag-completed {
+            background-color: #f0fdf4;
+            color: #16a34a;
+
+            .status-dot {
+                background-color: #16a34a;
+            }
+        }
+
+        &.status-tag-bitdi {
+            background-color: #fef2f2;
+            color: #dc2626;
+
+            .status-dot {
+                background-color: #dc2626;
+            }
+        }
+
+        &.status-tag-canceled {
+            background-color: #f5f3ff;
+            color: #7c3aed;
+
+            .status-dot {
+                background-color: #7c3aed;
+            }
+        }
+
+        &.status-tag-default {
+            background-color: #f3f4f6;
+            color: #6b7280;
+
+            .status-dot {
+                background-color: #9ca3af;
+            }
+        }
+    }
+
     .modal-overlay {
         position: fixed;
         inset: 0;
@@ -345,6 +443,36 @@
         padding: 20px;
     }
 
+    .booking-images {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+
+        .booking-image-item {
+            width: 120px;
+            height: 120px;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #e0e0e0;
+            background-color: #f0f0f0;
+
+            img {
+                width: 100%;
+                height: 100%;
+                object-fit: cover;
+            }
+        }
+    }
+
+    .product-link {
+        color: #007bff;
+        word-break: break-all;
+
+        &:hover {
+            text-decoration: underline;
+        }
+    }
+
     .modal-footer {
         display: flex;
         justify-content: flex-end;
@@ -445,6 +573,69 @@
             .amount-cell {
                 font-size: 12px;
             }
+        }
+    }
+}
+
+.status-dropdown-menu {
+    .ant-dropdown-menu {
+        padding: 6px;
+        border-radius: 10px;
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.1);
+        min-width: 180px;
+    }
+
+    .ant-dropdown-menu-item {
+        padding: 0;
+        border-radius: 6px;
+
+        &:hover {
+            background-color: #f5f5f5;
+        }
+    }
+
+    .status-menu-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 9px 12px;
+        width: 100%;
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .status-menu-label {
+            font-size: 14px;
+            color: #1f1f1f;
+            font-weight: 400;
+        }
+
+        .status-dot-pending {
+            background-color: #ea580c;
+        }
+
+        .status-dot-paid {
+            background-color: #2563eb;
+        }
+
+        .status-dot-completed {
+            background-color: #16a34a;
+        }
+
+        .status-dot-bitdi {
+            background-color: #dc2626;
+        }
+
+        .status-dot-canceled {
+            background-color: #7c3aed;
+        }
+
+        .status-dot-default {
+            background-color: #9ca3af;
         }
     }
 }

@@ -2,9 +2,92 @@ import React, { useEffect, useState } from "react";
 import "./Orders.scss";
 import axios from "axios";
 import { useCookies } from "react-cookie";
+import { toast } from "react-toastify";
+import { Dropdown } from "antd";
+import { DownOutlined } from "@ant-design/icons";
 import LoadingSpinner from "../../components/LoadingSpinner/LoadingSpinner";
 
 const ITEMS_PER_PAGE = 20;
+
+const STATUS_OPTIONS = [
+  { value: "Pending", label: "Gözləyir" },
+  { value: "Paid", label: "Ödənilib" },
+  { value: "Completed", label: "Tamamlandı" },
+  { value: "Bitdi", label: "Bitdi" },
+  { value: "Canceled", label: "Ləğv edildi" },
+];
+
+const getStatusClass = (status) => {
+  const normalized = (status || "").toLowerCase();
+  if (normalized === "pending") return "pending";
+  if (normalized === "paid") return "paid";
+  if (normalized === "completed") return "completed";
+  if (normalized === "bitdi") return "bitdi";
+  if (normalized === "canceled" || normalized === "cancelled") return "canceled";
+  return "default";
+};
+
+const getStatusLabel = (status) => {
+  const match = STATUS_OPTIONS.find(
+    (opt) => opt.value.toLowerCase() === (status || "").toLowerCase()
+  );
+  return match?.label || status || "-";
+};
+
+const normalizeStatus = (status) => {
+  const match = STATUS_OPTIONS.find(
+    (opt) => opt.value.toLowerCase() === (status || "").toLowerCase()
+  );
+  return match?.value || status || "Pending";
+};
+
+const StatusTag = ({ status, showArrow = false, className = "" }) => {
+  const statusClass = getStatusClass(status);
+  return (
+    <span className={`status-tag status-tag-${statusClass} ${className}`}>
+      <span className="status-dot" />
+      <span className="status-tag-label">{getStatusLabel(status)}</span>
+      {showArrow && <DownOutlined className="status-tag-arrow" />}
+    </span>
+  );
+};
+
+const StatusDropdown = ({ status, disabled, onChange }) => {
+  const currentStatus = normalizeStatus(status);
+
+  const menuItems = STATUS_OPTIONS.map((opt) => ({
+    key: opt.value,
+    label: (
+      <div className="status-menu-item">
+        <span className={`status-dot status-dot-${getStatusClass(opt.value)}`} />
+        <span className="status-menu-label">{opt.label}</span>
+      </div>
+    ),
+  }));
+
+  return (
+    <Dropdown
+      menu={{
+        items: menuItems,
+        onClick: ({ key }) => {
+          if (key !== currentStatus) onChange(key);
+        },
+      }}
+      trigger={["click"]}
+      disabled={disabled}
+      placement="bottomLeft"
+      overlayClassName="status-dropdown-menu"
+    >
+      <button
+        type="button"
+        className="status-dropdown-btn"
+        disabled={disabled}
+      >
+        <StatusTag status={currentStatus} showArrow />
+      </button>
+    </Dropdown>
+  );
+};
 
 const Orders = () => {
   const [cookies] = useCookies(["token"]);
@@ -13,95 +96,84 @@ const Orders = () => {
     Authorization: `Bearer ${token}`,
   };
 
-  const [orders, setOrders] = useState(null);
+  const [bookings, setBookings] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [pagination, setPagination] = useState({
-    currentPage: 1,
-    totalPages: 1,
-    totalItems: 0,
-    itemsPerPage: ITEMS_PER_PAGE,
-  });
-  const [selectedOrderId, setSelectedOrderId] = useState(null);
-  const [orderDetails, setOrderDetails] = useState(null);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [selectedBooking, setSelectedBooking] = useState(null);
   const [isModalOpen, setIsModalOpen] = useState(false);
-  const [isLoadingDetails, setIsLoadingDetails] = useState(false);
+  const [updatingStatusId, setUpdatingStatusId] = useState(null);
 
-  const fetchOrders = async (page = 1) => {
+  const fetchBookings = async () => {
     setIsLoading(true);
     try {
       const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/admin/orders`,
-        {
-          headers,
-          params: {
-            page,
-            limit: ITEMS_PER_PAGE,
-          },
-        }
+        `${import.meta.env.VITE_API_URL}/api/Bookings`,
+        { headers }
       );
-
-      const responseData = response?.data || {};
-      setOrders(responseData?.data || responseData || []);
-
-      if (responseData?.pagination) {
-        setPagination((prev) => ({
-          ...prev,
-          ...responseData.pagination,
-        }));
-      } else {
-        // Fallback when pagination is not returned from API
-        setPagination((prev) => ({
-          ...prev,
-          currentPage: page,
-          totalItems: Array.isArray(responseData?.data)
-            ? responseData.data.length
-            : Array.isArray(responseData)
-              ? responseData.length
-              : 0,
-          totalPages: 1,
-        }));
-      }
+      const data = Array.isArray(response?.data)
+        ? response.data
+        : response?.data?.data || [];
+      setBookings(data);
     } catch (error) {
-      console.error("Failed to fetch orders:", error);
-      setOrders([]);
+      console.error("Failed to fetch bookings:", error);
+      setBookings([]);
+      toast.error("Sifarişlər yüklənərkən xəta baş verdi");
     } finally {
       setIsLoading(false);
     }
   };
 
   useEffect(() => {
-    fetchOrders();
+    fetchBookings();
   }, []);
 
+  const totalPages = Math.max(1, Math.ceil(bookings.length / ITEMS_PER_PAGE));
+  const paginatedBookings = bookings.slice(
+    (currentPage - 1) * ITEMS_PER_PAGE,
+    currentPage * ITEMS_PER_PAGE
+  );
 
-  const fetchOrderDetails = async (orderId) => {
-    setIsLoadingDetails(true);
+  const updateBookingStatus = async (bookingId, newStatus) => {
+    setUpdatingStatusId(bookingId);
     try {
-      const response = await axios.get(
-        `${import.meta.env.VITE_API_URL}/api/admin/orders/${orderId}`,
-        { headers }
+      await axios.patch(
+        `${import.meta.env.VITE_API_URL}/api/Bookings/${bookingId}/status`,
+        JSON.stringify(newStatus),
+        {
+          headers: {
+            ...headers,
+            "Content-Type": "application/json",
+          },
+        }
       );
 
-      const responseData = response?.data || {};
-      setOrderDetails(responseData?.data || null);
+      setBookings((prev) =>
+        prev.map((b) =>
+          b.id === bookingId ? { ...b, status: newStatus } : b
+        )
+      );
+
+      if (selectedBooking?.id === bookingId) {
+        setSelectedBooking((prev) => ({ ...prev, status: newStatus }));
+      }
+
+      toast.success("Status uğurla yeniləndi");
     } catch (error) {
-      console.error("Failed to fetch order details:", error);
-      setOrderDetails(null);
+      console.error("Failed to update booking status:", error);
+      toast.error("Status yenilənərkən xəta baş verdi");
     } finally {
-      setIsLoadingDetails(false);
+      setUpdatingStatusId(null);
     }
   };
 
-  const handleViewOrder = (orderId) => {
-    setSelectedOrderId(orderId);
+  const handleViewBooking = (booking) => {
+    setSelectedBooking(booking);
     setIsModalOpen(true);
-    fetchOrderDetails(orderId);
   };
 
   const handleCloseModal = () => {
     setIsModalOpen(false);
-    setSelectedOrderId(null);
-    setOrderDetails(null);
+    setSelectedBooking(null);
   };
 
   const formatDate = (dateString) => {
@@ -117,12 +189,19 @@ const Orders = () => {
   };
 
   const formatCurrency = (amount) => {
+    if (amount == null) return "-";
     return `${amount} ₼`;
   };
 
   const handlePageChange = (newPage) => {
-    if (newPage < 1 || newPage > pagination.totalPages) return;
-    fetchOrders(newPage);
+    if (newPage < 1 || newPage > totalPages) return;
+    setCurrentPage(newPage);
+  };
+
+  const renderImageUrl = (path) => {
+    if (!path) return null;
+    if (path.startsWith("http")) return path;
+    return `${import.meta.env.VITE_API_URL}${path}`;
   };
 
   return (
@@ -137,14 +216,14 @@ const Orders = () => {
         <table className="orders-table">
           <thead>
             <tr>
-              <th>ID</th>
-              <th>İnvoys ID</th>
+              <th>№</th>
               <th>İstifadəçi</th>
               <th>E-mail</th>
-              <th>İstifadəçi adı</th>
-              <th>Məhsul sayı</th>
-              <th>Məbləğ</th>
-              <th>Tarix</th>
+              <th>Telefon</th>
+              <th>Xidmət</th>
+              <th>Qiymət</th>
+              <th>Randevu</th>
+              <th>Status</th>
               <th>Əməliyyatlar</th>
             </tr>
           </thead>
@@ -155,33 +234,40 @@ const Orders = () => {
                   <LoadingSpinner />
                 </td>
               </tr>
-            ) : orders && orders.length > 0 ? (
-              orders.map((order, index) => (
-                <tr key={order.id}>
+            ) : paginatedBookings.length > 0 ? (
+              paginatedBookings.map((booking, index) => (
+                <tr key={booking.id}>
                   <td>
-                    {(pagination.itemsPerPage || ITEMS_PER_PAGE) *
-                      ((pagination.currentPage || 1) - 1) +
-                      index +
-                      1}
+                    {ITEMS_PER_PAGE * (currentPage - 1) + index + 1}
                   </td>
-                  <td className="invoice-cell">{order.invoiceID || "-"}</td>
                   <td>
-                    {`${order.first_name || ""} ${order.last_name || ""}`.trim() ||
-                      "-"}
+                    {booking.user?.fullName || "-"}
+                    {booking.user?.isCorporate && booking.user?.companyName
+                      ? ` (${booking.user.companyName})`
+                      : ""}
                   </td>
-                  <td>{order.email || "-"}</td>
-                  <td>{order.username || "-"}</td>
-                  <td className="center-cell">{order.productCount || 0}</td>
+                  <td>{booking.user?.email || "-"}</td>
+                  <td>{booking.user?.phone || "-"}</td>
+                  <td>{booking.serviceName || "-"}</td>
                   <td className="amount-cell">
-                    {formatCurrency(order.amount || order.total || 0)}
+                    {formatCurrency(booking.price)}
                   </td>
-                  <td>{formatDate(order.createdAt)}</td>
+                  <td>{formatDate(booking.appointmentDate)}</td>
+                  <td>
+                    <StatusDropdown
+                      status={booking.status}
+                      disabled={updatingStatusId === booking.id}
+                      onChange={(newStatus) =>
+                        updateBookingStatus(booking.id, newStatus)
+                      }
+                    />
+                  </td>
                   <td>
                     <div className="d-flex gap-2">
                       <button
                         type="button"
                         className="btn btn-primary"
-                        onClick={() => handleViewOrder(order.id)}
+                        onClick={() => handleViewBooking(booking)}
                       >
                         Bax
                       </button>
@@ -200,43 +286,37 @@ const Orders = () => {
         </table>
       </div>
 
-      <div className="pagination-controls">
-        <button
-          type="button"
-          className="pagination-button"
-          onClick={() =>
-            handlePageChange((pagination.currentPage || 1) - 1)
-          }
-          disabled={isLoading || (pagination.currentPage || 1) <= 1}
-        >
-          Əvvəlki
-        </button>
+      {bookings.length > ITEMS_PER_PAGE && (
+        <div className="pagination-controls">
+          <button
+            type="button"
+            className="pagination-button"
+            onClick={() => handlePageChange(currentPage - 1)}
+            disabled={isLoading || currentPage <= 1}
+          >
+            Əvvəlki
+          </button>
 
-        <span className="pagination-info">
-          Səhifə {pagination.currentPage || 1} /{" "}
-          {pagination.totalPages || 1}
-        </span>
+          <span className="pagination-info">
+            Səhifə {currentPage} / {totalPages}
+          </span>
 
-        <button
-          type="button"
-          className="pagination-button"
-          onClick={() =>
-            handlePageChange((pagination.currentPage || 1) + 1)
-          }
-          disabled={
-            isLoading ||
-            (pagination.currentPage || 1) >= (pagination.totalPages || 1)
-          }
-        >
-          Sonrakı
-        </button>
-      </div>
+          <button
+            type="button"
+            className="pagination-button"
+            onClick={() => handlePageChange(currentPage + 1)}
+            disabled={isLoading || currentPage >= totalPages}
+          >
+            Sonrakı
+          </button>
+        </div>
+      )}
 
-      {isModalOpen && (
+      {isModalOpen && selectedBooking && (
         <div className="modal-overlay" onClick={handleCloseModal}>
           <div className="modal-content" onClick={(e) => e.stopPropagation()}>
             <div className="modal-header">
-              <h2>Sifariş Detalları</h2>
+              <h2>Sifariş Detalları #{selectedBooking.id}</h2>
               <button
                 type="button"
                 className="close-button"
@@ -247,123 +327,196 @@ const Orders = () => {
             </div>
 
             <div className="modal-body">
-              {isLoadingDetails ? (
-                <div style={{ textAlign: "center", padding: "40px" }}>
-                  <LoadingSpinner />
+              <div className="order-detail-section">
+                <h3>Ümumi Məlumat</h3>
+                <div className="detail-row">
+                  <span className="detail-label">Xidmət:</span>
+                  <span className="detail-value">
+                    {selectedBooking.serviceName || "-"}
+                  </span>
                 </div>
-              ) : orderDetails ? (
-                <>
-                  <div className="order-detail-section">
-                    <h3>Ümumi Məlumat</h3>
-                    <div className="detail-row">
-                      <span className="detail-label">Sifariş ID:</span>
-                      <span className="detail-value">{orderDetails.id}</span>
-                    </div>
-                    <div className="detail-row">
-                      <span className="detail-label">İnvoys ID:</span>
-                      <span className="detail-value">
-                        {orderDetails.invoiceID}
-                      </span>
-                    </div>
-                    <div className="detail-row">
-                      <span className="detail-label">Məbləğ:</span>
-                      <span className="detail-value">
-                        {formatCurrency(orderDetails.amount)}
-                      </span>
-                    </div>
-                    <div className="detail-row">
-                      <span className="detail-label">Tarix:</span>
-                      <span className="detail-value">
-                        {formatDate(orderDetails.createdAt)}
-                      </span>
-                    </div>
-                  </div>
+                <div className="detail-row">
+                  <span className="detail-label">Qiymət:</span>
+                  <span className="detail-value">
+                    {formatCurrency(selectedBooking.price)}
+                  </span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Randevu tarixi:</span>
+                  <span className="detail-value">
+                    {formatDate(selectedBooking.appointmentDate)}
+                  </span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Randevu vaxtı:</span>
+                  <span className="detail-value">
+                    {selectedBooking.appointmentSlot || "-"}
+                  </span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Status:</span>
+                  <span className="detail-value">
+                    <StatusTag status={selectedBooking.status} />
+                  </span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Yaradılma tarixi:</span>
+                  <span className="detail-value">
+                    {formatDate(selectedBooking.createdAt)}
+                  </span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Qeyd:</span>
+                  <span className="detail-value">
+                    {selectedBooking.note || "-"}
+                  </span>
+                </div>
+              </div>
 
-                  <div className="order-detail-section">
-                    <h3>İstifadəçi Məlumatları</h3>
-                    <div className="detail-row">
-                      <span className="detail-label">Ad:</span>
-                      <span className="detail-value">
-                        {orderDetails.first_name}
-                      </span>
-                    </div>
-                    <div className="detail-row">
-                      <span className="detail-label">Soyad:</span>
-                      <span className="detail-value">
-                        {orderDetails.last_name}
-                      </span>
-                    </div>
-                    <div className="detail-row">
-                      <span className="detail-label">E-mail:</span>
-                      <span className="detail-value">{orderDetails.email}</span>
-                    </div>
-                    <div className="detail-row">
-                      <span className="detail-label">İstifadəçi adı:</span>
-                      <span className="detail-value">
-                        {orderDetails.username}
-                      </span>
-                    </div>
-                    <div className="detail-row">
-                      <span className="detail-label">Telefon:</span>
-                      <span className="detail-value">
-                        {orderDetails.phone || "-"}
-                      </span>
-                    </div>
+              <div className="order-detail-section">
+                <h3>İstifadəçi Məlumatları</h3>
+                <div className="detail-row">
+                  <span className="detail-label">Ad:</span>
+                  <span className="detail-value">
+                    {selectedBooking.user?.fullName || "-"}
+                  </span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">E-mail:</span>
+                  <span className="detail-value">
+                    {selectedBooking.user?.email || "-"}
+                  </span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Telefon:</span>
+                  <span className="detail-value">
+                    {selectedBooking.user?.phone || "-"}
+                  </span>
+                </div>
+                {selectedBooking.user?.isCorporate && (
+                  <div className="detail-row">
+                    <span className="detail-label">Şirkət:</span>
+                    <span className="detail-value">
+                      {selectedBooking.user?.companyName || "-"}
+                    </span>
                   </div>
+                )}
+              </div>
 
-                  <div className="order-detail-section">
-                    <h3>Məhsullar</h3>
-                    {orderDetails.products && orderDetails.products.length > 0 ? (
-                      <div className="products-list">
-                        {orderDetails.products.map((product) => (
-                          <div key={product.id} className="product-item">
-                            <div className="product-image">
-                              {product.productTitleImage ? (
-                                <img
-                                  src={`${import.meta.env.VITE_API_URL}${product.productTitleImage}`}
-                                  alt={product.productName}
-                                />
-                              ) : (
-                                <div className="no-image">Şəkil yoxdur</div>
-                              )}
-                            </div>
-                            <div className="product-details">
-                              <div className="detail-row">
-                                <span className="detail-label">Məhsul adı:</span>
-                                <span className="detail-value">
-                                  {product.productName}
-                                </span>
-                              </div>
-                              <div className="detail-row">
-                                <span className="detail-label">Qiymət:</span>
-                                <span className="detail-value">
-                                  {formatCurrency(product.cost)}
-                                </span>
-                              </div>
-                              <div className="detail-row">
-                                <span className="detail-label">Təsvir:</span>
-                                <span className="detail-value">
-                                  {product.shortDescription || "-"}
-                                </span>
-                              </div>
-                              <div className="detail-row">
-                                <span className="detail-label">Əlavə tarixi:</span>
-                                <span className="detail-value">
-                                  {formatDate(product.createdAt)}
-                                </span>
-                              </div>
-                            </div>
+              <div className="order-detail-section">
+                <h3>Ünvan Məlumatları</h3>
+                <div className="detail-row">
+                  <span className="detail-label">Küçə:</span>
+                  <span className="detail-value">
+                    {selectedBooking.street || "-"}
+                  </span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Məkan növü:</span>
+                  <span className="detail-value">
+                    {selectedBooking.locationType || "-"}
+                  </span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Giriş:</span>
+                  <span className="detail-value">
+                    {selectedBooking.entrance || "-"}
+                  </span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Mərtəbə:</span>
+                  <span className="detail-value">
+                    {selectedBooking.floor || "-"}
+                  </span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Mənzil:</span>
+                  <span className="detail-value">
+                    {selectedBooking.apartment || "-"}
+                  </span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">İşarə:</span>
+                  <span className="detail-value">
+                    {selectedBooking.landmark || "-"}
+                  </span>
+                </div>
+              </div>
+
+              <div className="order-detail-section">
+                <h3>Əlaqə Məlumatları (Saytda)</h3>
+                <div className="detail-row">
+                  <span className="detail-label">Ad:</span>
+                  <span className="detail-value">
+                    {selectedBooking.siteContactName || "-"}
+                  </span>
+                </div>
+                <div className="detail-row">
+                  <span className="detail-label">Telefon:</span>
+                  <span className="detail-value">
+                    {selectedBooking.siteContactPhone || "-"}
+                  </span>
+                </div>
+              </div>
+
+              {selectedBooking.selectedProducts?.length > 0 && (
+                <div className="order-detail-section">
+                  <h3>Seçilmiş Məhsullar</h3>
+                  <div className="products-list">
+                    {selectedBooking.selectedProducts.map((product, idx) => (
+                      <div key={product.id || idx} className="product-item">
+                        <div className="product-details">
+                          <div className="detail-row">
+                            <span className="detail-label">Məhsul:</span>
+                            <span className="detail-value">
+                              {product.name || product.productName || JSON.stringify(product)}
+                            </span>
                           </div>
-                        ))}
+                        </div>
                       </div>
-                    ) : (
-                      <div className="no-products">Məhsul tapılmadı</div>
-                    )}
+                    ))}
                   </div>
-                </>
-              ) : (
-                <div style={{ textAlign: "center", padding: "40px", color: "#666" }}>
-                  Məlumat tapılmadı
+                </div>
+              )}
+
+              {(selectedBooking.images?.length > 0 ||
+                selectedBooking.productImagePath) && (
+                <div className="order-detail-section">
+                  <h3>Şəkillər</h3>
+                  <div className="booking-images">
+                    {selectedBooking.productImagePath && (
+                      <div className="booking-image-item">
+                        <img
+                          src={renderImageUrl(selectedBooking.productImagePath)}
+                          alt="Məhsul şəkli"
+                        />
+                      </div>
+                    )}
+                    {selectedBooking.images?.map((img) => (
+                      <div key={img.id} className="booking-image-item">
+                        <img
+                          src={renderImageUrl(img.imagePath)}
+                          alt={`Şəkil ${img.id}`}
+                        />
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
+
+              {selectedBooking.productLink && (
+                <div className="order-detail-section">
+                  <h3>Məhsul Linki</h3>
+                  <div className="detail-row">
+                    <a
+                      href={selectedBooking.productLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="product-link"
+                    >
+                      {selectedBooking.productLink}
+                    </a>
+                  </div>
                 </div>
               )}
             </div>
