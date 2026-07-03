@@ -109,11 +109,11 @@ const Sidebar = () => {
                 <i className="fa-solid fa-users"></i> <span>İstifadəçilər</span>
               </li>
             </Link>{" "}
-            <Link to="/settings" className="link" onClick={handleMenuItemClick}>
+            {/* <Link to="/settings" className="link" onClick={handleMenuItemClick}>
               <li className={isActive("/settings") ? "active" : ""}>
                 <i className="fa-solid fa-gear"></i> <span>Tənzimləmələr</span>
               </li>
-            </Link>
+            </Link> */}
           </ul>
         </div>
         <div className="sidebar-footer">
