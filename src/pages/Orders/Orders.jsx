@@ -333,6 +333,13 @@ const Orders = () => {
                   <span className="detail-label">Xidmət:</span>
                   <span className="detail-value">
                     {selectedBooking.serviceName || "-"}
+                    {selectedBooking.serviceListName?.length > 0 && (
+                      <ul className="service-list">
+                        {selectedBooking.serviceListName.map((service, idx) => (
+                          <li key={idx}>{service}</li>
+                        ))}
+                      </ul>
+                    )}
                   </span>
                 </div>
                 <div className="detail-row">
@@ -442,7 +449,7 @@ const Orders = () => {
                   </span>
                 </div>
               </div>
-
+              {/* 
               <div className="order-detail-section">
                 <h3>Əlaqə Məlumatları (Saytda)</h3>
                 <div className="detail-row">
@@ -457,7 +464,7 @@ const Orders = () => {
                     {selectedBooking.siteContactPhone || "-"}
                   </span>
                 </div>
-              </div>
+              </div> */}
 
               {selectedBooking.selectedProducts?.length > 0 && (
                 <div className="order-detail-section">
@@ -481,28 +488,28 @@ const Orders = () => {
 
               {(selectedBooking.images?.length > 0 ||
                 selectedBooking.productImagePath) && (
-                <div className="order-detail-section">
-                  <h3>Şəkillər</h3>
-                  <div className="booking-images">
-                    {selectedBooking.productImagePath && (
-                      <div className="booking-image-item">
-                        <img
-                          src={renderImageUrl(selectedBooking.productImagePath)}
-                          alt="Məhsul şəkli"
-                        />
-                      </div>
-                    )}
-                    {selectedBooking.images?.map((img) => (
-                      <div key={img.id} className="booking-image-item">
-                        <img
-                          src={renderImageUrl(img.imagePath)}
-                          alt={`Şəkil ${img.id}`}
-                        />
-                      </div>
-                    ))}
+                  <div className="order-detail-section">
+                    <h3>Şəkillər</h3>
+                    <div className="booking-images">
+                      {selectedBooking.productImagePath && (
+                        <div className="booking-image-item">
+                          <img
+                            src={renderImageUrl(selectedBooking.productImagePath)}
+                            alt="Məhsul şəkli"
+                          />
+                        </div>
+                      )}
+                      {selectedBooking.images?.map((img) => (
+                        <div key={img.id} className="booking-image-item">
+                          <img
+                            src={renderImageUrl(img.imagePath)}
+                            alt={`Şəkil ${img.id}`}
+                          />
+                        </div>
+                      ))}
+                    </div>
                   </div>
-                </div>
-              )}
+                )}
 
               {selectedBooking.productLink && (
                 <div className="order-detail-section">
