@@ -86,7 +86,8 @@
             }
 
             &:nth-child(8) {
-                min-width: 140px;
+                min-width: 180px;
+                white-space: normal;
             }
 
             &:last-child {
@@ -189,6 +190,25 @@
         }
     }
 
+    .status-cell,
+    .status-detail-value {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 6px;
+    }
+
+    .countdown-timer {
+        font-size: 12px;
+        font-weight: 600;
+        color: #2563eb;
+        font-variant-numeric: tabular-nums;
+
+        &.expired {
+            color: #dc2626;
+        }
+    }
+
     .status-dropdown-btn {
         display: inline-flex;
         padding: 0;
@@ -250,21 +270,39 @@
             }
         }
 
+        &.status-tag-master-assigned {
+            background-color: #f0f9ff;
+            color: #0284c7;
+
+            .status-dot {
+                background-color: #0284c7;
+            }
+        }
+
+        &.status-tag-master-on-the-way {
+            background-color: #ecfeff;
+            color: #0891b2;
+
+            .status-dot {
+                background-color: #0891b2;
+            }
+        }
+
+        &.status-tag-in-progress {
+            background-color: #fefce8;
+            color: #ca8a04;
+
+            .status-dot {
+                background-color: #ca8a04;
+            }
+        }
+
         &.status-tag-completed {
             background-color: #f0fdf4;
             color: #16a34a;
 
             .status-dot {
                 background-color: #16a34a;
-            }
-        }
-
-        &.status-tag-bitdi {
-            background-color: #fef2f2;
-            color: #dc2626;
-
-            .status-dot {
-                background-color: #dc2626;
             }
         }
 
@@ -285,6 +323,13 @@
                 background-color: #9ca3af;
             }
         }
+    }
+
+    .modal-loading {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 200px;
     }
 
     .modal-overlay {
@@ -639,12 +684,20 @@
             background-color: #2563eb;
         }
 
-        .status-dot-completed {
-            background-color: #16a34a;
+        .status-dot-master-assigned {
+            background-color: #0284c7;
         }
 
-        .status-dot-bitdi {
-            background-color: #dc2626;
+        .status-dot-master-on-the-way {
+            background-color: #0891b2;
+        }
+
+        .status-dot-in-progress {
+            background-color: #ca8a04;
+        }
+
+        .status-dot-completed {
+            background-color: #16a34a;
         }
 
         .status-dot-canceled {
